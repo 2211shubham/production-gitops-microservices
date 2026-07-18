@@ -1,3 +1,8 @@
+# Data source for EC2 Instance Connect IP prefix list in us-east-1
+data "aws_ec2_managed_prefix_list" "ec2_instance_connect" {
+  name = "com.amazonaws.us-east-1.ec2-instance-connect"
+}
+
 # Generate a key and registers it in AWS.
 
 resource "tls_private_key" "bastion_key" {
@@ -26,13 +31,20 @@ resource "aws_security_group" "bastion_sg" {
   vpc_id = module.vpc.vpc_id
 
   ingress {
-    description = "SSH from my IP"
+    description = "SSH from anywhere"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = ["${chomp(data.http.my_ip.response_body)}/32"]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
+  ingress {
+    description     = "SSH from AWS EC2 Instance Connect"
+    from_port       = 22
+    to_port         = 22
+    protocol        = "tcp"
+    prefix_list_ids = [data.aws_ec2_managed_prefix_list.ec2_instance_connect.id]
+  }
 
   egress {
     from_port   = 0
@@ -52,11 +64,12 @@ resource "aws_security_group" "bastion_sg" {
 module "bastion_host" {
   source = "terraform-aws-modules/ec2-instance/aws"
 
-  name          = "bastion-host"
-  ami           = data.aws_ami.ubuntu.id
-  instance_type = "t3.micro"
-  key_name      = aws_key_pair.bastion_keypair.key_name
-  monitoring    = true
+  name                  = "bastion-host"
+  ami                   = data.aws_ami.ubuntu.id
+  instance_type         = "t3.micro"
+  key_name              = aws_key_pair.bastion_keypair.key_name
+  monitoring            = true
+  create_security_group = false
 
   subnet_id              = element(module.vpc.public_subnets, 0)
   vpc_security_group_ids = [aws_security_group.bastion_sg.id]
@@ -69,4 +82,16 @@ module "bastion_host" {
     Role        = "bastion"
   }
 }
+
+resource "aws_eip" "bastion_eip" {
+  instance = module.bastion_host.id
+  domain   = "vpc"
+
+  tags = {
+    Name        = "bastion-eip"
+    Environment = "dev"
+    Terraform   = "true"
+  }
+}
+
 
