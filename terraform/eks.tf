@@ -2,10 +2,10 @@ resource "aws_security_group" "add_sg_eks" {
   name   = "additional-eks-sg"
   vpc_id = module.vpc.vpc_id
   ingress {
-    description = "HTTPS from bastion host"
-    from_port   = 443
-    to_port     = 443
-    protocol    = "tcp"
+    description     = "HTTPS from bastion host"
+    from_port       = 443
+    to_port         = 443
+    protocol        = "tcp"
     security_groups = [aws_security_group.bastion_sg.id]
   }
 
@@ -47,8 +47,8 @@ module "eks" {
   enable_cluster_creator_admin_permissions = true
 
 
-  vpc_id     = module.vpc.vpc_id
-  subnet_ids = module.vpc.private_subnets
+  vpc_id                        = module.vpc.vpc_id
+  subnet_ids                    = module.vpc.private_subnets
   additional_security_group_ids = [aws_security_group.add_sg_eks.id]
 
   eks_managed_node_groups = {
