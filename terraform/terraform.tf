@@ -1,8 +1,9 @@
 terraform {
   backend "s3" {
-    bucket = "shubham-gitops-backend13344"
-    key    = "dev/terraform.tfstate"
-    region = "us-east-1"
+    bucket         = "shubham-gitops-backend13344"
+    key            = "dev/terraform.tfstate"
+    region         = "us-east-1"
+    dynamodb_table = "shubham-gitops-locks"
   }
 
   required_providers {
