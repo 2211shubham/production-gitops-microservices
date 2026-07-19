@@ -28,3 +28,5 @@ docker build ./
 
 
 # Initial build trigger
+
+# Trigger build

@@ -6,3 +6,5 @@ Run the following command to restore dependencies to `vendor/` directory:
 # 1. Add a small comment inside src/frontend/README.md
 echo "# Triggering microservice build" >> src/frontend/README.md
 # Initial build trigger
+
+# Trigger build
