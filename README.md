@@ -1,3 +1,10 @@
+# 🚀 Production-Grade GitOps & Microservices Platform
+
+**Architected & Maintained by:** [Shubham Sharma](https://github.com/your-username)
+**Tech Stack:** AWS EKS | Terraform | ArgoCD | Gateway API | Istio Service Mesh | Prometheus & Grafana
+
+> A production-ready Kubernetes infrastructure showcasing GitOps continuous delivery, AWS EKS automation, remote S3 state locking, and service mesh microservices.
+
 # Project Introduction
 
 # Intro to Online Boutique App
