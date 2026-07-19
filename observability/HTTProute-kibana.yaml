@@ -5,7 +5,7 @@ metadata:
   namespace: logging
 spec:
   hostnames:
-    - "kibana.dsvault.in"
+    - "kibana.shubham-devops.xyz"
   parentRefs:
   - group: gateway.networking.k8s.io
     namespace: default
