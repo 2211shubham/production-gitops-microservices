@@ -41,11 +41,20 @@ jobs:
       # -------------------
       - name: Build Image
         run: |
+          BUILD_DIR="./src/${{ inputs.service }}"
+          DOCKERFILE="${BUILD_DIR}/Dockerfile"
+
+          if [ ! -f "$DOCKERFILE" ] && [ -f "${BUILD_DIR}/src/Dockerfile" ]; then
+            BUILD_DIR="${BUILD_DIR}/src"
+            DOCKERFILE="${BUILD_DIR}/Dockerfile"
+          fi
+
           docker build \
             --cache-from=type=gha \
             --cache-to=type=gha,mode=max \
+            -f $DOCKERFILE \
             -t $IMAGE_NAME \
-            ./src/${{ inputs.service }}
+            $BUILD_DIR
 
       # -------------------
       # Security Scan (before push)
